@@ -1,111 +1,107 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
 require('../db/conn');
-const User = require('../model/userSchema');
+const User = require("../model/userSchema");
 
+router.get('/', (req, res) => {
+    res.send(`Router js is called`);
+});
 
-router.get('/',(req,res) =>{
-    res.send('hello world from server router js');
-}
-)
-
-//Async-Await
 router.post('/signup', async (req, res) => {
 
-    const { name, email , phone, work , password ,confirmPassword} = req.body;
+    const { name, email, uname, password, phone } = req.body;
 
-    if(!name || !email || !phone || !work || !password || !confirmPassword){
-        return res.status(422).json({error: "please filled the field propely"});
+    if (!name || !email || !uname || !password || !phone) {
+        return res.status(400).json({ error: "Fill all Require Feild Properly " });
     }
 
-    try{
+    if(password.length < 8) {
+        return res.status(400).json({ error: "password should be minimum 8 characters" });
+}
 
-        const userExist = await User.findOne({email: email});
+    try {
 
-        if(userExist){
-            return res.status(422).json({message: "Email already Exist" });
-        } else if(password != confirmPassword){
-            return res.status(422).json({message: "password are not matching" });
+        const userExist = await User.findOne({ email: email });
+
+
+
+        if (userExist) {
+            return res.status(400).json({ error: "Email already exist" });
+        } else if (password != cpassword) {
+            return res.status(400).json({ error: "password is not matching" })
+
         } else {
-            const user = new User({ name, email, phone, password, confirmPassword });
-            // yaha pe
+
+            const user = new User({ name, email,uname, phone, password });
+
+            // Hashing is Used
+
+
             await user.save();
-            res.status(201).json({ message: "user registered successfuly" });
+
+            res.status(201).json({ message: " User register successfuly" });
+
+
         }
 
-    }
-    catch(err){
+
+
+    } catch (err) {
+
         console.log(err);
     }
 
+
+
+
 });
 
-// app.get('/signup', async (req,res) =>{
-//     console.log(req.body);
-//     // res.json({ message: req.body })
-//     try{
-//         const (email, password ) = req.body;
 
-//         if(!email || !password){
-//             return res.status(400).json({error:"Please fill the data"})
-//         }
+//signin
 
-//         const userLogin = await User.findOne({ email: email });
+router.post('/signin', async (req, res) => {
 
-//         //console.log(userLogin);
-//         if(userLogin){
-//             const isMatch = await bcrypt.compare(password, userLogin.password);
-
-//             const token 
-//             if(!isMatch){
-//                 res.status(400).json({ error: "Invalid Credientials "});
-//             } else {
-
-//             }
-//             }else{
-//                 res.status(400).json({ error: "Invalid Credientials "});
-//         }
-
-    // }catch(err){
-    //     console.log(err);
-    // }
-// }
-// )
-
-
-
-//login route
-router.post('/login', async (req,res) => {
-    try{
+    try {
+        let token;
         const { email, password } = req.body;
 
-        if(!email || !password){
-            return res.status(400).json({error:"Please fill the data"})
+        if (!email || !password) {
+            return res.status(400).json({ error: "invalid credentials" });
         }
-        
+
+          if(password.length < 8) {
+            return res.status(400).json({ error: "invalid credentials" });
+}
+        console.log(password.length);
         const userLogin = await User.findOne({ email: email });
 
-        if(userLogin){
+
+        if (userLogin) {
             const isMatch = await bcrypt.compare(password, userLogin.password);
-            
-            const token = await userLogin.generateAuthToke();
-            if(!isMatch){
-                res.status(400).json({ error: "Invalid Credientials "});
+
+
+
+
+
+            if (!isMatch) {
+                res.status(400).json({ error: "invalid credential" });
             } else {
-            
+                token = await userLogin.generateAuthToken();
+                console.log(token);
+                
+                res.cookie("jwtoken", token, {
+                    expires: new Date(Date.now() + 25892000000),
+                    httpOnly: true
+                });
+                res.json({ message: "user sign in successfully" })
             }
-        }else{
-            res.status(400).json({ error: "Invalid Credientials "});
+        } else {
+            res.status(400).json({ error: "Invalid Credential" })
         }
-    }catch(err){
+
+
+
+
+    } catch (err) {
         console.log(err);
     }
 
-    console.log(req.body);
 });
-
-
-module.exports = router;

@@ -11,7 +11,7 @@ function Login() {
     <div class="container text-center paddingtitle mb-3">
         <h3><u class="fs-1">Login Details</u></h3>
     </div>
-    <form action='' method="Post">
+    <form action='/' method="">
             <div className="row">
         <div className="col-md-6 offset-md-3">
         <div class="container">
@@ -28,12 +28,10 @@ function Login() {
                 <input type="password" class="form-control" id="floatingPassword" placeholder="Password"/>
                 <label for="floatingPassword">Password</label>
             </div>
-            <form action='/home'>
+
             <div className="container text-center my-4">
                 <input class="btn btn-success text-black" type="submit" value="Submit"></input>
             </div>
-            </form>
-            
         </div>
         </div>
     </div>

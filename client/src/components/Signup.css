@@ -1,6 +1,6 @@
 .background_img{
     width:100%;
-    background: linear-gradient(to right, rgba(0,0,0,.9),rgba(0,0,0,.5)), url(../../pexels-deva-darshan-1044341.jpg);
+    background: linear-gradient(to right, rgba(0,0,0,0),rgba(0,0,0,0));
 }
 
 .btn{

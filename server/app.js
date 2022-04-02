@@ -1,24 +1,22 @@
-// const dotenv = require('dotenv');
-// const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const express = require('express');
 const app = express();
 
+dotenv.config({ path: './config.env'});
 
-// dotenv.config({ path: './config.env'});
-// require('./db/conn');
-// const User = require('./model/userSchema')
+const PORT = process.env.PORT;
+require('./db/conn');
+const User = require('./model/userSchema')
 
 // we link our router files to make our route easy
-app.use(require('./router/auth'))
+// app.use(require('./router/auth'))
 
-app.use(express.json());
-
-// const Port = process.env.PORT;
+// app.use(express.json());
 
 //middleware
 const middleware = (req,res,next) => {
     console.log('hello from middleware');
-    next();
+    // next();
 }
 middleware(); 
 app.get('/',(req,res) =>{
@@ -39,7 +37,7 @@ app.get('/login',(req,res) =>{
 }
 )
 app.get('/signup',(req,res) =>{
-    res.send('hello world from server ka signup');
+    res.send('hello world from server ka register page');
 }
 )
 app.get('/upload',(req,res) =>{
@@ -51,10 +49,11 @@ app.get('/history',(req,res) =>{
 }
 )
 
-// app.listen(PORT,()=>{
-//     console.log('hello from port ${PORT}');
-// })
-
-app.listen(3000,()=>{
-    console.log('hello from port 3000');
+app.listen(PORT, () => {
+    //console.log('hello from port PORT');
+    console.log("Server is running on port no " + PORT);
 })
+
+// app.listen(3000,()=>{
+//     console.log('hello from port 3000');
+// })

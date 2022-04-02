@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = rewuire('bcryptjs');
+const bcrypt = require('bcryptjs');
+// const autoincrement = require('mongoose-auto-increment');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -54,6 +55,6 @@ userSchema.method.generateAuthToken = async function () {
 }
 
 //collection creation
-const User = mongoose.model('USER', userSchema);
+const User = mongoose.model('SIGNUP', userSchema);
 
 module.exports = User; 
